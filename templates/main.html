@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 50px;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        #camera-feed {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #qr-result {
+            margin-bottom: 20px;
+        }
+        #details {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        #details p {
+            margin-bottom: 10px;
+        }
+        .history-table {
+            margin-top: 30px;
+        }
+        .navbar, .dropdown-menu {
+            background-color: #1e1e1e;
+            border-color: #333;
+        }
+        .navbar-brand, .nav-link, .dropdown-item {
+            color: #e0e0e0 !important;
+        }
+        .btn-primary {
+            background-color: #1f6f8b;
+            border-color: #1f6f8b;
+        }
+        .btn-primary:hover {
+            background-color: #3a86a0;
+            border-color: #3a86a0;
+        }
+        .table {
+            color: #e0e0e0;
+        }
+        .table thead {
+            background-color: #333;
+        }
+        .table tbody tr {
+            background-color: #1e1e1e;
+        }
+        .table tbody tr:hover {
+            background-color: #333;
+        }
+        .form-control {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            border: 1px solid #333;
+        }
+        .form-control:focus {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <form method="post" action="{{ url_for('logout') }}">
+                        <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; padding: 0;">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+
+    <div class="container">
+        <h1 class="mt-5">Welcome, {{ username }}!</h1>
+        <button class="btn btn-primary mt-3" onclick="startScan()" id="start-scan-btn">Start Scan</button>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="camera-feed">
+                    <!-- Camera feed will be shown here -->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="details">
+                    <h4>Details</h4>
+                    <hr>
+                    <p><strong>BATCH:</strong> <span id="batch"></span></p>
+                    <p><strong>HU:</strong> <span id="hu"></span></p>
+                    <p><strong>MATERIAL:</strong> <span id="material"></span></p>
+                    <form id="start-width-form" style="display:none;" method="post" action="{{ url_for('update_start_w') }}">
+                        <div class="form-group">
+                            <label for="start_w">Start Width</label>
+                            <input type="text" class="form-control" id="start_w" name="start_w" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Start Width</button>
+                    </form>
+                    <form id="middle-width-form" style="display:none;" method="post" action="{{ url_for('update_middle_w') }}">
+                        <div class="form-group">
+                            <label for="middle_w">Middle Width</label>
+                            <input type="text" class="form-control" id="middle_w" name="middle_w" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Middle Width</button>
+                    </form>
+                    <form id="end-width-form" style="display:none;" method="post" action="{{ url_for('update_end_w') }}">
+                        <div class="form-group">
+                            <label for="end_w">End Width</label>
+                            <input type="text" class="form-control" id="end_w" name="end_w" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit End Width</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="qr-result">
+            <!-- QR code result will be shown here -->
+        </div>
+
+        <div class="history-table">
+            <h2>Scan History</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Scan Time</th>
+                        <th>BATCH</th>
+                        <th>HU</th>
+                        <th>Material</th>
+                        <th>Start Width</th>
+                        <th>Middle Width</th>
+                        <th>End Width</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in history_data %}
+                    <tr>
+                        <td>{{ record.username }}</td>
+                        <td>{{ record.scan_time }}</td>
+                        <td>{{ record.batch }}</td>
+                        <td>{{ record.hu }}</td>
+                        <td>{{ record.material }}</td>
+                        <td>{{ record.start_w }}</td>
+                        <td>{{ record.middle_w }}</td>
+                        <td>{{ record.end_w }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let scanInterval;
+
+        function startScan() {
+            document.getElementById('start-scan-btn').disabled = true;
+            const cameraFeed = document.getElementById('camera-feed');
+            cameraFeed.innerHTML = `<img src="${cameraUrl}" class="img-fluid" alt="Camera Feed">`;
+
+            scanInterval = setInterval(() => {
+                fetch('/start_scan')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        clearInterval(scanInterval);
+                        document.getElementById('batch').innerText = data.batch;
+                        document.getElementById('hu').innerText = data.hu;
+                        document.getElementById('material').innerText = data.material;
+                        document.getElementById('start-width-form').style.display = 'block';
+                        document.getElementById('middle-width-form').style.display = 'none';
+                        document.getElementById('end-width-form').style.display = 'none';
+                        cameraFeed.innerHTML = '';
+                    } else {
+                        console.log('No QR code found, retrying...');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }, 2000);
+        }
+
+        document.getElementById('start-width-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById('start-width-form').style.display = 'none';
+                    document.getElementById('middle-width-form').style.display = 'block';
+                }
+            });
+        });
+
+        document.getElementById('middle-width-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById('middle-width-form').style.display = 'none';
+                    document.getElementById('end-width-form').style.display = 'block';
+                }
+            });
+        });
+
+        document.getElementById('end-width-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById('end-width-form').style.display = 'none';
+                    document.getElementById('start-scan-btn').disabled = false;
+                }
+            });
+        });
+
+        const cameraUrl = "http://192.168.8.171:8080/video";
+    </script>
+</body>
+</html>

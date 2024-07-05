@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #554a4a;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4e7268;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f3f4f5;
+        }
+
+        .back-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            border: none;
+            background-color: #f3f4f5;
+            color: #232020;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>History Data</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Scan Time</th>
+                    <th>Batch</th>
+                    <th>HU</th>
+                    <th>Material</th>
+                    <th>Start Weight</th>
+                    <th>Middle Weight</th>
+                    <th>End Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in history_data %}
+                <tr>
+                    <td>{{ row.username }}</td>
+                    <td>{{ row.scan_time }}</td>
+                    <td>{{ row.batch }}</td>
+                    <td>{{ row.hu }}</td>
+                    <td>{{ row.material }}</td>
+                    <td>{{ row.start_w }}</td>
+                    <td>{{ row.middle_w }}</td>
+                    <td>{{ row.end_w }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('dashboard2') }}" class="back-button">Back to Admin Home</a>
+    </div>
+</body>
+</html>

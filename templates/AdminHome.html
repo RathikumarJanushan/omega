@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1, h2 {
+            color: #ffffff;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="file"], input[type="submit"], button[type="submit"], button[type="button"] {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: #ffffff;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="file"] {
+            display: block;
+            margin: 0 auto;
+            background-color: #2c2c2c;
+            color: #bbbbbb;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background-color: #007BFF;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="file"]::-webkit-file-upload-button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="submit"]:hover, button[type="submit"]:hover, button[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="button"] {
+            background-color: #007BFF;
+        }
+
+    </style>
+    <script>
+        function redirectToViewHistory() {
+            window.location.href = "{{ url_for('view_history') }}";
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ admin_name }}!</h1>
+
+        <h2>Add Master Data</h2>
+        <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx,.xls">
+            <input type="submit" value="Upload">
+        </form>
+
+        <h2>View History</h2>
+        <form action="javascript:void(0);">
+            <button type="button" onclick="redirectToViewHistory()">View History</button>
+        </form>
+
+        <br>
+        <br>
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</body>
+</html>
